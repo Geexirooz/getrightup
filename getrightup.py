@@ -1,11 +1,10 @@
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 from time import sleep  # this should go at the top of the file
-import unicodedata
 from bs4 import BeautifulSoup
-import re
 
 # Options set
-options = webdriver.FirefoxOptions()
+options = Options()
 options.add_argument("--headless")
 
 # Get the page
