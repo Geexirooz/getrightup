@@ -4,15 +4,23 @@ import unicodedata
 from bs4 import BeautifulSoup
 import re
 
-browser = webdriver.Firefox()
+# Options set
+options = webdriver.FirefoxOptions()
+options.add_argument("--headless")
+
+# Get the page
+browser = webdriver.Firefox(options=options)
 browser.get("https://pentester.land/writeups/")
+
+# wait until it's processed
 sleep(5)
+
+# get the rendered source code
 src = browser.execute_script(
     "return document.getElementsByTagName('html')[0].innerHTML"
 )
-# src = unicodedata.normalize("NFKD", src).encode("ascii", "ignore")
 
-print(type(src))
+
 soup = BeautifulSoup(src, "html.parser")
 odd_trs = soup.find_all("tr", {"class": "odd"})
 even_trs = soup.find_all("tr", {"class": "even"})
