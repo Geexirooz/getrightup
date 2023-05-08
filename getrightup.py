@@ -69,7 +69,7 @@ def discordit(msg: str, webhook: str) -> None:
     data = {"content": msg}
     requests.post(webhook, json=data)
 
-    return
+    return None
 
 
 def getrightup() -> None:
@@ -80,26 +80,40 @@ def getrightup() -> None:
     """
     src = BeautifulSoup(get_pentesterland_rendered_source(), "html.parser")
     new_writeups = get_trs(src)
+    try:
+        with open("writeups.lst") as f:
+            old_writeups = json.load(f)
 
-    with open("writeups.lst") as f:
-        old_writeups = json.load(f)
+        newly_released_writeups = [i for i in new_writeups if i not in old_writeups]
 
-    newly_released_writeups = [i for i in new_writeups if i not in old_writeups]
+        if newly_released_writeups:
+            for writeup in newly_released_writeups:
+                msg = "{:s}:\n{:s}\n".format(writeup[0], writeup[1])
+                discordit(msg, args.webhook)
 
-    if newly_released_writeups:
-        for writeup in newly_released_writeups:
-            msg = "{:s}:\n{:s}\n".format(writeup[0], writeup[1])
-            discordit(msg, args.webhook)
-
-        with open("writeups.lst", "w") as f:
+            with open("writeups.lst", "w") as f:
+                json.dump(new_writeups, f)
+    except json.decoder.JSONDecodeError:
+        with open("writeups.lst") as f:
+            if f.read() != "":
+                print(
+                    "error occured while reading from writeups.lst (bad format of data)"
+                )
+                print("overwriting the file with new data ...")
+                with open("writeups.lst", "w") as f:
+                    json.dump(new_writeups, f)
+    except FileNotFoundError:
+        with open("writeups.lst", "w+") as f:
             json.dump(new_writeups, f)
+        print("you will get notification on your Discord channel from next run")
 
-    return
+    return None
 
 
 def main():
     getrightup()
-    return
+
+    return None
 
 
 if __name__ == "__main__":
