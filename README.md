@@ -8,7 +8,7 @@ sudo apt update -y && sudo apt upgrade -y && apt install firefox
 ```
 
 ## Install geckodriver
-download Geckodriver from (https://github.com/mozilla/geckodriver/releases) and extract it and put it in your PATH (suggestion -> `~/.local/bin`)
+Download [Geckodriver](https://github.com/mozilla/geckodriver/releases), extract it and then put it in your PATH (suggestion -> `~/.local/bin`)
 
 # Setup
 ```
@@ -17,6 +17,7 @@ pip3 install -r requirements.txt
 ```
 
 # Run 
+Tested with Python 3.11.2
 ```
 python3 getrightup.py
 ```
