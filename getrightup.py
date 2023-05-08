@@ -7,6 +7,24 @@ import requests
 import sys
 import argparse
 
+
+class col:
+    """
+    A class to define colors for a nice output printing
+    """
+
+    if sys.stdout.isatty():
+        green = "\033[32m"
+        blue = "\033[94m"
+        red = "\033[31m"
+        end = "\033[0m"
+    else:  # Colours mess up redirected output, disable them
+        green = ""
+        blue = ""
+        red = ""
+        end = ""
+
+
 # get command line args
 parser = argparse.ArgumentParser(
     "bountydog.py",
@@ -97,20 +115,30 @@ def getrightup() -> None:
         with open("writeups.lst") as f:
             if f.read() != "":
                 print(
-                    "error occured while reading from writeups.lst (bad format of data)"
+                    "{:s}Error occured while reading from writeups.lst (bad format of data){:s}".format(
+                        col.red, col.end
+                    )
                 )
-                print("overwriting the file with new data ...")
+                print(
+                    "{:s}overwriting the file with new data ...{:s}".format(
+                        col.blue, col.end
+                    )
+                )
                 with open("writeups.lst", "w") as f:
                     json.dump(new_writeups, f)
     except FileNotFoundError:
         with open("writeups.lst", "w+") as f:
             json.dump(new_writeups, f)
-        print("you will get notification on your Discord channel from next run")
+        print(
+            "{:s}You will get notification on your Discord channel from next run!{:s}".format(
+                col.green, col.end
+            )
+        )
 
     return None
 
 
-def main():
+def main() -> None:
     getrightup()
 
     return None
