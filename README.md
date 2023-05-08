@@ -19,5 +19,5 @@ pip3 install -r requirements.txt
 # Run 
 Tested with Python 3.11.2
 ```
-python3 getrightup.py
+python3 getrightup.py -d https://discord.com/api/webhooks/YOUR_WEBHOOK
 ```
