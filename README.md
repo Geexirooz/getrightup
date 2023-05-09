@@ -21,3 +21,9 @@ Tested with Python 3.11.2
 ```
 python3 getrightup.py -d https://discord.com/api/webhooks/YOUR_WEBHOOK
 ```
+
+# Crontab
+Every 2 hours
+```
+0 */2 * * * cd /path/to/getrightup/; /usr/bin/python3 getrightup.py -d https://discord.com/api/webhooks/YOUR_WEBHOOK
+```
