@@ -115,7 +115,7 @@ def getrightup() -> None:
         with open("writeups.lst") as f:
             if f.read() != "":
                 print(
-                    "{:s}Error occured while reading from writeups.lst (bad format of data){:s}".format(
+                    "{:s}Error occured while reading from writeups.lst (bad data format){:s}".format(
                         col.red, col.end
                     )
                 )
