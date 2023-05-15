@@ -27,7 +27,7 @@ class col:
 
 # get command line args
 parser = argparse.ArgumentParser(
-    "bountydog.py",
+    "getrightup.py",
     formatter_class=lambda prog: argparse.HelpFormatter(prog, max_help_position=40),
 )
 
