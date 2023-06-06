@@ -9,6 +9,7 @@ import argparse
 
 
 class col:
+    
     """
     A class to define colors for a nice output printing
     """
@@ -25,7 +26,10 @@ class col:
         end = ""
 
 
-# get command line args
+"""
+This section parses the arguments
+"""
+
 parser = argparse.ArgumentParser(
     "getrightup.py",
     formatter_class=lambda prog: argparse.HelpFormatter(prog, max_help_position=40),
@@ -45,9 +49,11 @@ args = parser.parse_args()
 
 
 def get_pentesterland_rendered_source() -> str:
+    
     """
     This function returns html source of the Pentesterlab page after executing all Javascript files.
     """
+    
     # set headless browser option
     options = Options()
     options.add_argument("--headless")
@@ -66,10 +72,12 @@ def get_pentesterland_rendered_source() -> str:
 
 
 def get_trs(src) -> list:
+    
     """
     This function returns a list of all writeups in the first page as a list of their titles and links within
     an embedded list.
     """
+    
     trs = src.find("tbody")
     lst_os_writeups = []
     for tr in trs.children:
@@ -81,9 +89,11 @@ def get_trs(src) -> list:
 
 
 def discordit(msg: str, webhook: str) -> None:
+    
     """
     This function sends a message to the desired Discord channel.
     """
+    
     data = {"content": msg}
     requests.post(webhook, json=data)
 
@@ -91,26 +101,34 @@ def discordit(msg: str, webhook: str) -> None:
 
 
 def getrightup() -> None:
+    
     """
     This function is the main function.
     It parses the page source and get the differences between new writeups list and the one which has been
     derived via the previous run.
     """
+    
     src = BeautifulSoup(get_pentesterland_rendered_source(), "html.parser")
     new_writeups = get_trs(src)
     try:
         with open("writeups.lst") as f:
             old_writeups = json.load(f)
-
+       
+        # Check for new writeups
         newly_released_writeups = [i for i in new_writeups if i not in old_writeups]
 
+        # If there is any new writeup -> wrap them up as a msg and send them to the Discord channel
         if newly_released_writeups:
             for writeup in newly_released_writeups:
                 msg = "{:s}:\n{:s}\n".format(writeup[0], writeup[1])
                 discordit(msg, args.webhook)
 
+            # Update the local file by writing down the newly fetched writeups
             with open("writeups.lst", "w") as f:
                 json.dump(new_writeups, f)
+    
+    # Handling some errors in case of parsing issue of the old file if it is tampered
+    # It overwrites the new changes to the old file
     except json.decoder.JSONDecodeError:
         with open("writeups.lst") as f:
             if f.read() != "":
@@ -126,6 +144,8 @@ def getrightup() -> None:
                 )
                 with open("writeups.lst", "w") as f:
                     json.dump(new_writeups, f)
+    # If there is no local record of writeups (at first run or by deleteing the file)
+    # This section handles it by creating a new file with the latest changes
     except FileNotFoundError:
         with open("writeups.lst", "w+") as f:
             json.dump(new_writeups, f)
