@@ -1,5 +1,5 @@
 # getrightup
-This tool gives you write-ups to read daily
+This tool gives you daily write-ups to read from [PentesterLand](https://pentester.land/) website.
 
 # Prerequisites
 ## Install Firefox
